@@ -1,0 +1,1811 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Трекер Мерча</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body { margin: 0; background: #EDEDE7; font-family: 'Nunito', system-ui, sans-serif; }
+  * { -webkit-font-smoothing: antialiased; box-sizing: border-box; }
+  button { cursor: pointer; }
+
+  @keyframes mfadeUp {
+    from { opacity: 0; transform: translateY(16px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes mfadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes mbobFloat {
+    0%,100% { transform: translateY(0px); }
+    50%     { transform: translateY(-7px); }
+  }
+  @keyframes mGradShift {
+    0%,100% { background-position: 0% 50%; }
+    50%     { background-position: 100% 50%; }
+  }
+  @keyframes mStarPulse {
+    0%,100% { transform: scale(1) rotate(0deg); }
+    50%     { transform: scale(1.3) rotate(14deg); }
+  }
+  @keyframes mCartBounce {
+    0%,100% { transform: scale(1); }
+    35%     { transform: scale(1.25); }
+    65%     { transform: scale(0.92); }
+  }
+  @keyframes mSlideInModal {
+    from { transform: translateY(100%); opacity: 0.85; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+  @keyframes mShimmer {
+    from { background-position: -200% center; }
+    to   { background-position:  200% center; }
+  }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     iOS FRAME
+════════════════════════════════════════════════════════════ -->
+<script type="text/babel">
+function IOSStatusBar({ dark = false, time = '9:41' }) {
+  const c = dark ? '#fff' : '#000';
+  return (
+    <div style={{
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      padding: '21px 24px 19px', boxSizing: 'border-box',
+      position: 'relative', zIndex: 20, width: '100%',
+    }}>
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <span style={{ fontFamily: '-apple-system,"SF Pro",system-ui', fontWeight: 590, fontSize: 17, color: c }}>
+          {time}
+        </span>
+      </div>
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7 }}>
+        <svg width="19" height="12" viewBox="0 0 19 12">
+          <rect x="0"    y="7.5" width="3.2" height="4.5" rx="0.7" fill={c}/>
+          <rect x="4.8"  y="5"   width="3.2" height="7"   rx="0.7" fill={c}/>
+          <rect x="9.6"  y="2.5" width="3.2" height="9.5" rx="0.7" fill={c}/>
+          <rect x="14.4" y="0"   width="3.2" height="12"  rx="0.7" fill={c}/>
+        </svg>
+        <svg width="17" height="12" viewBox="0 0 17 12">
+          <path d="M8.5 3.2C10.8 3.2 12.9 4.1 14.4 5.6L15.5 4.5C13.7 2.7 11.2 1.5 8.5 1.5C5.8 1.5 3.3 2.7 1.5 4.5L2.6 5.6C4.1 4.1 6.2 3.2 8.5 3.2Z" fill={c}/>
+          <path d="M8.5 6.8C9.9 6.8 11.1 7.3 12 8.2L13.1 7.1C11.8 5.9 10.2 5.1 8.5 5.1C6.8 5.1 5.2 5.9 3.9 7.1L5 8.2C5.9 7.3 7.1 6.8 8.5 6.8Z" fill={c}/>
+          <circle cx="8.5" cy="10.5" r="1.5" fill={c}/>
+        </svg>
+        <svg width="27" height="13" viewBox="0 0 27 13">
+          <rect x="0.5" y="0.5" width="23" height="12" rx="3.5" stroke={c} strokeOpacity="0.35" fill="none"/>
+          <rect x="2" y="2" width="20" height="9" rx="2" fill={c}/>
+          <path d="M25 4.5V8.5C25.8 8.2 26.5 7.2 26.5 6.5C26.5 5.8 25.8 4.8 25 4.5Z" fill={c} fillOpacity="0.4"/>
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+function IOSDevice({ children, width = 402, height = 874, dark = false }) {
+  return (
+    <div style={{
+      width, height, borderRadius: 48, overflow: 'hidden',
+      position: 'relative', background: dark ? '#000' : '#F2F2F7',
+      boxShadow: '0 40px 80px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.12)',
+      fontFamily: '-apple-system, system-ui, sans-serif',
+      WebkitFontSmoothing: 'antialiased',
+    }}>
+      <div style={{
+        position: 'absolute', top: 11, left: '50%', transform: 'translateX(-50%)',
+        width: 126, height: 37, borderRadius: 24, background: '#000', zIndex: 50,
+      }} />
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10 }}>
+        <IOSStatusBar dark={dark} />
+      </div>
+      <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ flex: 1, overflow: 'auto' }}>{children}</div>
+      </div>
+      <div style={{
+        position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 60,
+        height: 34, display: 'flex', justifyContent: 'center', alignItems: 'flex-end',
+        paddingBottom: 8, pointerEvents: 'none',
+      }}>
+        <div style={{
+          width: 139, height: 5, borderRadius: 100,
+          background: dark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.25)',
+        }} />
+      </div>
+    </div>
+  );
+}
+
+Object.assign(window, { IOSDevice, IOSStatusBar });
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════
+     DESIGN CANVAS
+════════════════════════════════════════════════════════════ -->
+<script type="text/babel">
+const DC = {
+  bg: '#f0eee9', grid: 'rgba(0,0,0,0.06)', label: 'rgba(60,50,40,0.7)',
+  title: 'rgba(40,30,20,0.85)', subtitle: 'rgba(60,50,40,0.6)',
+  font: '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif',
+};
+
+if (typeof document !== 'undefined' && !document.getElementById('dc-styles')) {
+  const s = document.createElement('style');
+  s.id = 'dc-styles';
+  s.textContent = [
+    '.dc-editable{cursor:text;outline:none;white-space:nowrap;border-radius:3px;padding:0 2px;margin:0 -2px}',
+    '.dc-editable:focus{background:#fff;box-shadow:0 0 0 1.5px #c96442}',
+    '[data-dc-slot]{transition:transform .18s cubic-bezier(.2,.7,.3,1)}',
+    '[data-dc-slot].dc-dragging{transition:none;z-index:10;pointer-events:none}',
+    '[data-dc-slot].dc-dragging .dc-card{box-shadow:0 12px 40px rgba(0,0,0,.25),0 0 0 2px #c96442;transform:scale(1.02)}',
+    '.dc-card{isolation:isolate;transition:box-shadow .15s,transform .15s}',
+    '.dc-card *{scrollbar-width:none}',
+    '.dc-card *::-webkit-scrollbar{display:none}',
+    '.dc-header{position:absolute;bottom:100%;left:-4px;margin-bottom:calc(4px * var(--dc-inv-zoom,1));z-index:2;display:flex;align-items:center;container-type:inline-size}',
+    '.dc-labelrow{display:flex;align-items:center;gap:4px;height:24px;flex:1 1 auto;min-width:0}',
+    '.dc-grip{flex:0 0 auto;cursor:grab;display:flex;align-items:center;padding:5px 4px;border-radius:4px;transition:background .12s,opacity .12s}',
+    '.dc-grip:hover{background:rgba(0,0,0,.08)}',
+    '.dc-grip:active{cursor:grabbing}',
+    '.dc-labeltext{flex:1 1 auto;min-width:0;cursor:pointer;border-radius:4px;padding:3px 6px;display:flex;align-items:center;transition:background .12s;overflow:hidden}',
+    '@container (max-width: 110px){.dc-labeltext{display:none}.dc-grip{opacity:0}[data-dc-slot]:hover .dc-grip{opacity:1}}',
+    '.dc-labeltext:hover{background:rgba(0,0,0,.05)}',
+    '.dc-labeltext .dc-editable{overflow:hidden;text-overflow:ellipsis;max-width:100%}',
+    '.dc-labeltext .dc-editable:focus{overflow:visible;text-overflow:clip}',
+    '.dc-btns{flex:0 0 auto;margin-left:auto;display:flex;gap:2px;opacity:0;transition:opacity .12s}',
+    '[data-dc-slot]:hover .dc-btns,.dc-btns:has(.dc-menu){opacity:1}',
+    '.dc-expand,.dc-kebab{width:22px;height:22px;border-radius:5px;border:none;cursor:pointer;padding:0;background:transparent;color:rgba(60,50,40,.7);display:flex;align-items:center;justify-content:center;font:inherit;transition:background .12s,color .12s}',
+    '.dc-expand:hover,.dc-kebab:hover{background:rgba(0,0,0,.06);color:#2a251f}',
+    '[data-dc-slot]:has(.dc-menu){z-index:10}',
+    '.dc-menu{position:absolute;top:100%;right:0;margin-top:4px;background:#fff;border-radius:8px;box-shadow:0 8px 28px rgba(0,0,0,.18),0 0 0 1px rgba(0,0,0,.05);padding:4px;min-width:160px;z-index:10}',
+    '.dc-menu button{display:block;width:100%;padding:7px 10px;border:0;background:transparent;border-radius:5px;font-family:inherit;font-size:13px;font-weight:500;line-height:1.2;color:#29261b;cursor:pointer;text-align:left;transition:background .12s;white-space:nowrap}',
+    '.dc-menu button:hover{background:rgba(0,0,0,.05)}',
+    '.dc-menu hr{border:0;border-top:1px solid rgba(0,0,0,.08);margin:4px 2px}',
+    '.dc-menu .dc-danger{color:#c96442}',
+    '.dc-menu .dc-danger:hover{background:rgba(201,100,66,.1)}',
+    '.dc-header{width:calc((100% + 4px) / var(--dc-inv-zoom,1));transform:scale(var(--dc-inv-zoom,1));transform-origin:bottom left}',
+    '.dc-sectionhead{zoom:var(--dc-inv-zoom,1)}',
+  ].join('\n');
+  document.head.appendChild(s);
+}
+
+const DCCtx = React.createContext(null);
+const DC_STATE_FILE = '.design-canvas.state.json';
+
+function DesignCanvas({ children, minScale, maxScale, style }) {
+  const [state, setState] = React.useState({ sections: {}, focus: null });
+  const [ready, setReady] = React.useState(false);
+  const didRead = React.useRef(false);
+  const skipNextWrite = React.useRef(false);
+
+  React.useEffect(() => {
+    let off = false;
+    fetch('./' + DC_STATE_FILE)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((saved) => {
+        if (off || !saved || !saved.sections) return;
+        skipNextWrite.current = true;
+        setState((s) => ({ ...s, sections: saved.sections }));
+      })
+      .catch(() => {})
+      .finally(() => { didRead.current = true; if (!off) setReady(true); });
+    const t = setTimeout(() => { if (!off) setReady(true); }, 150);
+    return () => { off = true; clearTimeout(t); };
+  }, []);
+
+  React.useEffect(() => {
+    if (!didRead.current) return;
+    if (skipNextWrite.current) { skipNextWrite.current = false; return; }
+    const t = setTimeout(() => {
+      window.omelette?.writeFile(DC_STATE_FILE, JSON.stringify({ sections: state.sections })).catch(() => {});
+    }, 250);
+    return () => clearTimeout(t);
+  }, [state.sections]);
+
+  const registry = {};
+  const sectionMeta = {};
+  const sectionOrder = [];
+  React.Children.forEach(children, (sec) => {
+    if (!sec || sec.type !== DCSection) return;
+    const sid = sec.props.id ?? sec.props.title;
+    if (!sid) return;
+    sectionOrder.push(sid);
+    const persisted = state.sections[sid] || {};
+    const abs = [];
+    React.Children.forEach(sec.props.children, (ab) => {
+      if (!ab || ab.type !== DCArtboard) return;
+      const aid = ab.props.id ?? ab.props.label;
+      if (aid) abs.push([aid, ab]);
+    });
+    const srcKey = abs.map(([k]) => k).join('\x1f');
+    const hidden = persisted.srcKey === srcKey ? (persisted.hidden || []) : [];
+    const srcIds = [];
+    abs.forEach(([aid, ab]) => {
+      if (hidden.includes(aid)) return;
+      registry[`${sid}/${aid}`] = { sectionId: sid, artboard: ab };
+      srcIds.push(aid);
+    });
+    const kept = (persisted.order || []).filter((k) => srcIds.includes(k));
+    sectionMeta[sid] = {
+      title: persisted.title ?? sec.props.title,
+      subtitle: sec.props.subtitle,
+      slotIds: [...kept, ...srcIds.filter((k) => !kept.includes(k))],
+    };
+  });
+
+  const api = React.useMemo(() => ({
+    state,
+    section: (id) => state.sections[id] || {},
+    patchSection: (id, p) => setState((s) => ({
+      ...s,
+      sections: { ...s.sections, [id]: { ...s.sections[id], ...(typeof p === 'function' ? p(s.sections[id] || {}) : p) } },
+    })),
+    setFocus: (slotId) => setState((s) => ({ ...s, focus: slotId })),
+  }), [state]);
+
+  React.useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') api.setFocus(null); };
+    const onPd = (e) => {
+      const ae = document.activeElement;
+      if (ae && ae.isContentEditable && !ae.contains(e.target)) ae.blur();
+    };
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('pointerdown', onPd, true);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('pointerdown', onPd, true);
+    };
+  }, [api]);
+
+  return (
+    <DCCtx.Provider value={api}>
+      <DCViewport minScale={minScale} maxScale={maxScale} style={style}>{ready && children}</DCViewport>
+      {state.focus && registry[state.focus] && (
+        <DCFocusOverlay entry={registry[state.focus]} sectionMeta={sectionMeta} sectionOrder={sectionOrder} />
+      )}
+    </DCCtx.Provider>
+  );
+}
+
+function DCViewport({ children, minScale = 0.1, maxScale = 8, style = {} }) {
+  const vpRef = React.useRef(null);
+  const worldRef = React.useRef(null);
+  const tf = React.useRef({ x: 0, y: 0, scale: 1 });
+  const tfKey = 'dc-viewport:' + location.pathname;
+  const saveT = React.useRef(0);
+  const lastPostedScale = React.useRef();
+
+  const apply = React.useCallback(() => {
+    const { x, y, scale } = tf.current;
+    const el = worldRef.current;
+    if (!el) return;
+    el.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${scale})`;
+    el.style.setProperty('--dc-inv-zoom', String(1 / scale));
+    if (lastPostedScale.current !== scale) {
+      lastPostedScale.current = scale;
+      window.parent.postMessage({ type: '__dc_zoom', scale }, '*');
+    }
+    clearTimeout(saveT.current);
+    saveT.current = setTimeout(() => {
+      try { localStorage.setItem(tfKey, JSON.stringify(tf.current)); } catch {}
+    }, 200);
+  }, [tfKey]);
+
+  React.useLayoutEffect(() => {
+    const flush = () => {
+      clearTimeout(saveT.current);
+      try { localStorage.setItem(tfKey, JSON.stringify(tf.current)); } catch {}
+    };
+    try {
+      const s = JSON.parse(localStorage.getItem(tfKey) || 'null');
+      if (s && Number.isFinite(s.x) && Number.isFinite(s.y) && Number.isFinite(s.scale)) {
+        tf.current = { x: s.x, y: s.y, scale: Math.min(maxScale, Math.max(minScale, s.scale)) };
+        apply();
+      }
+    } catch {}
+    window.addEventListener('pagehide', flush);
+    return () => { window.removeEventListener('pagehide', flush); flush(); };
+  }, []);
+
+  React.useEffect(() => {
+    const vp = vpRef.current;
+    if (!vp) return;
+
+    const zoomAt = (cx, cy, factor) => {
+      const r = vp.getBoundingClientRect();
+      const px = cx - r.left, py = cy - r.top;
+      const t = tf.current;
+      const next = Math.min(maxScale, Math.max(minScale, t.scale * factor));
+      const k = next / t.scale;
+      t.x = px - (px - t.x) * k;
+      t.y = py - (py - t.y) * k;
+      t.scale = next;
+      apply();
+    };
+
+    const isMouseWheel = (e) =>
+      e.deltaMode !== 0 || (e.deltaX === 0 && Number.isInteger(e.deltaY) && Math.abs(e.deltaY) >= 40);
+
+    const onWheel = (e) => {
+      e.preventDefault();
+      if (isGesturing) return;
+      if ((e.ctrlKey || e.metaKey) && !isMouseWheel(e)) {
+        zoomAt(e.clientX, e.clientY, Math.exp(-e.deltaY * 0.01));
+      } else if (isMouseWheel(e)) {
+        zoomAt(e.clientX, e.clientY, Math.exp(-Math.sign(e.deltaY) * 0.18));
+      } else {
+        tf.current.x -= e.deltaX;
+        tf.current.y -= e.deltaY;
+        apply();
+      }
+    };
+
+    let gsBase = 1, isGesturing = false;
+    const onGestureStart = (e) => { e.preventDefault(); isGesturing = true; gsBase = tf.current.scale; };
+    const onGestureChange = (e) => { e.preventDefault(); zoomAt(e.clientX, e.clientY, (gsBase * e.scale) / tf.current.scale); };
+    const onGestureEnd = (e) => { e.preventDefault(); isGesturing = false; };
+
+    let drag = null;
+    const onPointerDown = (e) => {
+      const onBg = !e.target.closest('[data-dc-slot], .dc-editable');
+      if (!(e.button === 1 || (e.button === 0 && onBg))) return;
+      e.preventDefault();
+      vp.setPointerCapture(e.pointerId);
+      drag = { id: e.pointerId, lx: e.clientX, ly: e.clientY };
+      vp.style.cursor = 'grabbing';
+    };
+    const onPointerMove = (e) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      tf.current.x += e.clientX - drag.lx;
+      tf.current.y += e.clientY - drag.ly;
+      drag.lx = e.clientX; drag.ly = e.clientY;
+      apply();
+    };
+    const onPointerUp = (e) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      vp.releasePointerCapture(e.pointerId);
+      drag = null;
+      vp.style.cursor = '';
+    };
+
+    const onHostMsg = (e) => {
+      const d = e.data;
+      if (d && d.type === '__dc_set_zoom' && typeof d.scale === 'number') {
+        const r = vp.getBoundingClientRect();
+        zoomAt(r.left + r.width / 2, r.top + r.height / 2, d.scale / tf.current.scale);
+      } else if (d && d.type === '__dc_probe') {
+        window.parent.postMessage({ type: '__dc_present' }, '*');
+        lastPostedScale.current = undefined;
+        apply();
+      }
+    };
+    window.addEventListener('message', onHostMsg);
+    window.parent.postMessage({ type: '__dc_present' }, '*');
+    lastPostedScale.current = undefined;
+    apply();
+
+    vp.addEventListener('wheel', onWheel, { passive: false });
+    vp.addEventListener('gesturestart', onGestureStart, { passive: false });
+    vp.addEventListener('gesturechange', onGestureChange, { passive: false });
+    vp.addEventListener('gestureend', onGestureEnd, { passive: false });
+    vp.addEventListener('pointerdown', onPointerDown);
+    vp.addEventListener('pointermove', onPointerMove);
+    vp.addEventListener('pointerup', onPointerUp);
+    vp.addEventListener('pointercancel', onPointerUp);
+    return () => {
+      window.removeEventListener('message', onHostMsg);
+      vp.removeEventListener('wheel', onWheel);
+      vp.removeEventListener('gesturestart', onGestureStart);
+      vp.removeEventListener('gesturechange', onGestureChange);
+      vp.removeEventListener('gestureend', onGestureEnd);
+      vp.removeEventListener('pointerdown', onPointerDown);
+      vp.removeEventListener('pointermove', onPointerMove);
+      vp.removeEventListener('pointerup', onPointerUp);
+      vp.removeEventListener('pointercancel', onPointerUp);
+    };
+  }, [apply, minScale, maxScale]);
+
+  const gridSvg = `url("data:image/svg+xml,%3Csvg width='120' height='120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M120 0H0v120' fill='none' stroke='${encodeURIComponent(DC.grid)}' stroke-width='1'/%3E%3C/svg%3E")`;
+  return (
+    <div ref={vpRef} style={{
+      height: '100vh', width: '100vw', background: DC.bg,
+      overflow: 'hidden', overscrollBehavior: 'none', touchAction: 'none',
+      position: 'relative', fontFamily: DC.font, ...style,
+    }}>
+      <div ref={worldRef} style={{
+        position: 'absolute', top: 0, left: 0,
+        transformOrigin: '0 0', willChange: 'transform',
+        width: 'max-content', minWidth: '100%', minHeight: '100%',
+        padding: '60px 0 80px',
+      }}>
+        <div style={{ position: 'absolute', inset: -6000, backgroundImage: gridSvg, backgroundSize: '120px 120px', pointerEvents: 'none', zIndex: -1 }} />
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function DCSection({ id, title, subtitle, children, gap = 48 }) {
+  const ctx = React.useContext(DCCtx);
+  const sid = id ?? title;
+  const all = React.Children.toArray(children);
+  const artboards = all.filter((c) => c && c.type === DCArtboard);
+  const rest = all.filter((c) => !(c && c.type === DCArtboard));
+  const sec = (ctx && sid && ctx.section(sid)) || {};
+  const allIds = artboards.map((a) => a.props.id ?? a.props.label).filter(Boolean);
+  const srcKey = allIds.join('\x1f');
+  const hidden = sec.srcKey === srcKey ? (sec.hidden || []) : [];
+  const srcOrder = allIds.filter((k) => !hidden.includes(k));
+
+  const order = React.useMemo(() => {
+    const kept = (sec.order || []).filter((k) => srcOrder.includes(k));
+    return [...kept, ...srcOrder.filter((k) => !kept.includes(k))];
+  }, [sec.order, srcOrder.join('|')]);
+
+  const byId = Object.fromEntries(artboards.map((a) => [a.props.id ?? a.props.label, a]));
+
+  return (
+    <div data-dc-section={sid} style={{ marginBottom: 'calc(80px * var(--dc-inv-zoom, 1))', position: 'relative' }}>
+      <div style={{ padding: '0 60px' }}>
+        <div className="dc-sectionhead" style={{ paddingBottom: 36 }}>
+          <DCEditable tag="div" value={sec.title ?? title}
+            onChange={(v) => ctx && sid && ctx.patchSection(sid, { title: v })}
+            style={{ fontSize: 28, fontWeight: 600, color: DC.title, letterSpacing: -0.4, marginBottom: 6, display: 'inline-block' }} />
+          {subtitle && <div style={{ fontSize: 16, color: DC.subtitle }}>{subtitle}</div>}
+        </div>
+      </div>
+      <div style={{ display: 'flex', gap, padding: '0 60px', alignItems: 'flex-start', width: 'max-content' }}>
+        {order.map((k) => (
+          <DCArtboardFrame key={k} sectionId={sid} artboard={byId[k]} order={order}
+            label={(sec.labels || {})[k] ?? byId[k].props.label}
+            onRename={(v) => ctx && ctx.patchSection(sid, (x) => ({ labels: { ...x.labels, [k]: v } }))}
+            onReorder={(next) => ctx && ctx.patchSection(sid, { order: next })}
+            onDelete={() => ctx && ctx.patchSection(sid, (x) => ({
+              hidden: [...(x.srcKey === srcKey ? (x.hidden || []) : []), k], srcKey,
+            }))}
+            onFocus={() => ctx && ctx.setFocus(`${sid}/${k}`)} />
+        ))}
+      </div>
+      {rest}
+    </div>
+  );
+}
+
+function DCArtboard() { return null; }
+
+function DCArtboardFrame({ sectionId, artboard, label, order, onRename, onReorder, onFocus, onDelete }) {
+  const { id: rawId, label: rawLabel, width = 260, height = 480, children, style = {} } = artboard.props;
+  const id = rawId ?? rawLabel;
+  const ref = React.useRef(null);
+  const cardRef = React.useRef(null);
+  const menuRef = React.useRef(null);
+  const [menuOpen, setMenuOpen] = React.useState(false);
+  const [confirming, setConfirming] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!menuOpen) { setConfirming(false); return; }
+    const off = (e) => { if (!menuRef.current || !menuRef.current.contains(e.target)) setMenuOpen(false); };
+    document.addEventListener('pointerdown', off, true);
+    return () => document.removeEventListener('pointerdown', off, true);
+  }, [menuOpen]);
+
+  const onGripDown = (e) => {
+    e.preventDefault(); e.stopPropagation();
+    const me = ref.current;
+    const scale = me.getBoundingClientRect().width / me.offsetWidth || 1;
+    const peers = Array.from(document.querySelectorAll(`[data-dc-section="${sectionId}"] [data-dc-slot]`));
+    const homes = peers.map((el) => ({ el, id: el.dataset.dcSlot, x: el.getBoundingClientRect().left }));
+    const slotXs = homes.map((h) => h.x);
+    const startIdx = order.indexOf(id);
+    const startX = e.clientX;
+    let liveOrder = order.slice();
+    me.classList.add('dc-dragging');
+
+    const layout = () => {
+      for (const h of homes) {
+        if (h.id === id) continue;
+        const slot = liveOrder.indexOf(h.id);
+        h.el.style.transform = `translateX(${(slotXs[slot] - h.x) / scale}px)`;
+      }
+    };
+
+    const move = (ev) => {
+      const dx = ev.clientX - startX;
+      me.style.transform = `translateX(${dx / scale}px)`;
+      const cur = homes[startIdx].x + dx;
+      let nearest = 0, best = Infinity;
+      for (let i = 0; i < slotXs.length; i++) {
+        const d = Math.abs(slotXs[i] - cur);
+        if (d < best) { best = d; nearest = i; }
+      }
+      if (liveOrder.indexOf(id) !== nearest) {
+        liveOrder = order.filter((k) => k !== id);
+        liveOrder.splice(nearest, 0, id);
+        layout();
+      }
+    };
+
+    const up = () => {
+      document.removeEventListener('pointermove', move);
+      document.removeEventListener('pointerup', up);
+      const finalSlot = liveOrder.indexOf(id);
+      me.classList.remove('dc-dragging');
+      me.style.transform = `translateX(${(slotXs[finalSlot] - homes[startIdx].x) / scale}px)`;
+      setTimeout(() => {
+        for (const h of homes) { h.el.style.transition = 'none'; h.el.style.transform = ''; }
+        if (liveOrder.join('|') !== order.join('|')) onReorder(liveOrder);
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          for (const h of homes) h.el.style.transition = '';
+        }));
+      }, 180);
+    };
+    document.addEventListener('pointermove', move);
+    document.addEventListener('pointerup', up);
+  };
+
+  return (
+    <div ref={ref} data-dc-slot={id} style={{ position: 'relative', flexShrink: 0 }}>
+      <div className="dc-header" style={{ color: DC.label }} onPointerDown={(e) => e.stopPropagation()}>
+        <div className="dc-labelrow">
+          <div className="dc-grip" onPointerDown={onGripDown} title="Перетащить">
+            <svg width="9" height="13" viewBox="0 0 9 13" fill="currentColor">
+              <circle cx="2" cy="2" r="1.1"/><circle cx="7" cy="2" r="1.1"/>
+              <circle cx="2" cy="6.5" r="1.1"/><circle cx="7" cy="6.5" r="1.1"/>
+              <circle cx="2" cy="11" r="1.1"/><circle cx="7" cy="11" r="1.1"/>
+            </svg>
+          </div>
+          <div className="dc-labeltext" onClick={onFocus}>
+            <DCEditable value={label} onChange={onRename} onClick={(e) => e.stopPropagation()}
+              style={{ fontSize: 15, fontWeight: 500, color: DC.label, lineHeight: 1 }} />
+          </div>
+        </div>
+        <div className="dc-btns">
+          <div ref={menuRef} style={{ position: 'relative' }}>
+            <button className="dc-kebab" onClick={() => setMenuOpen((o) => !o)}>
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                <circle cx="2.5" cy="6" r="1.1"/><circle cx="6" cy="6" r="1.1"/><circle cx="9.5" cy="6" r="1.1"/>
+              </svg>
+            </button>
+            {menuOpen && (
+              <div className="dc-menu" onPointerDown={(e) => e.stopPropagation()}>
+                <button className="dc-danger"
+                  onClick={() => { if (confirming) { setMenuOpen(false); onDelete(); } else setConfirming(true); }}>
+                  {confirming ? 'Нажмите ещё раз' : 'Удалить'}
+                </button>
+              </div>
+            )}
+          </div>
+          <button className="dc-expand" onClick={onFocus} title="Развернуть">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+              <path d="M7 1h4v4M5 11H1V7M11 1L7.5 4.5M1 11l3.5-3.5"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div ref={cardRef} className="dc-card"
+        style={{ borderRadius: 2, boxShadow: '0 1px 3px rgba(0,0,0,.08),0 4px 16px rgba(0,0,0,.06)', overflow: 'hidden', width, height, background: '#fff', ...style }}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function DCEditable({ value, onChange, style, tag = 'span', onClick }) {
+  const T = tag;
+  return (
+    <T className="dc-editable" contentEditable suppressContentEditableWarning
+      onClick={onClick}
+      onPointerDown={(e) => e.stopPropagation()}
+      onBlur={(e) => onChange && onChange(e.currentTarget.textContent)}
+      onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.currentTarget.blur(); } }}
+      style={style}>{value}</T>
+  );
+}
+
+function DCFocusOverlay({ entry, sectionMeta, sectionOrder }) {
+  const ctx = React.useContext(DCCtx);
+  const { sectionId, artboard } = entry;
+  const sec = ctx.section(sectionId);
+  const meta = sectionMeta[sectionId];
+  const peers = meta.slotIds;
+  const aid = artboard.props.id ?? artboard.props.label;
+  const idx = peers.indexOf(aid);
+  const secIdx = sectionOrder.indexOf(sectionId);
+
+  const go = (d) => { const n = peers[(idx + d + peers.length) % peers.length]; if (n) ctx.setFocus(`${sectionId}/${n}`); };
+
+  React.useEffect(() => {
+    const k = (e) => {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(1); }
+    };
+    document.addEventListener('keydown', k);
+    return () => document.removeEventListener('keydown', k);
+  });
+
+  const { width = 260, height = 480, children } = artboard.props;
+  const [vp, setVp] = React.useState({ w: window.innerWidth, h: window.innerHeight });
+  React.useEffect(() => { const r = () => setVp({ w: window.innerWidth, h: window.innerHeight }); window.addEventListener('resize', r); return () => window.removeEventListener('resize', r); }, []);
+  const scale = Math.max(0.1, Math.min((vp.w - 200) / width, (vp.h - 260) / height, 2));
+
+  const Arrow = ({ dir, onClick }) => (
+    <button onClick={(e) => { e.stopPropagation(); onClick(); }}
+      style={{ position: 'absolute', top: '50%', [dir]: 28, transform: 'translateY(-50%)',
+        border: 'none', background: 'rgba(255,255,255,.08)', color: 'rgba(255,255,255,.9)',
+        width: 44, height: 44, borderRadius: 22, fontSize: 18, cursor: 'pointer',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background .15s' }}
+      onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,.18)')}
+      onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,.08)')}>
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+        <path d={dir === 'left' ? 'M11 3L5 9l6 6' : 'M7 3l6 6-6 6'} />
+      </svg>
+    </button>
+  );
+
+  return ReactDOM.createPortal(
+    <div onClick={() => ctx.setFocus(null)} onWheel={(e) => e.preventDefault()}
+      style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(24,20,16,.6)', backdropFilter: 'blur(14px)', fontFamily: DC.font, color: '#fff' }}>
+      <div onClick={(e) => e.stopPropagation()}
+        style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 72, display: 'flex', alignItems: 'flex-start', padding: '16px 20px 0', gap: 16 }}>
+        <span style={{ fontSize: 18, fontWeight: 600 }}>{meta.title}</span>
+        <div style={{ flex: 1 }} />
+        <button onClick={() => ctx.setFocus(null)}
+          style={{ border: 'none', background: 'transparent', color: 'rgba(255,255,255,.7)', width: 32, height: 32, borderRadius: 16, fontSize: 20, cursor: 'pointer' }}>×</button>
+      </div>
+      <div style={{ position: 'absolute', top: 64, bottom: 56, left: 100, right: 100, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16 }}>
+        <div onClick={(e) => e.stopPropagation()} style={{ width: width * scale, height: height * scale, position: 'relative' }}>
+          <div style={{ width, height, transform: `scale(${scale})`, transformOrigin: 'top left', background: '#fff', borderRadius: 2, overflow: 'hidden', boxShadow: '0 20px 80px rgba(0,0,0,.4)' }}>
+            {children}
+          </div>
+        </div>
+        <div onClick={(e) => e.stopPropagation()} style={{ fontSize: 14, fontWeight: 500, opacity: .85, textAlign: 'center' }}>
+          {(sec.labels || {})[aid] ?? artboard.props.label}
+          <span style={{ opacity: .5, marginLeft: 10 }}>{idx + 1} / {peers.length}</span>
+        </div>
+      </div>
+      <Arrow dir="left" onClick={() => go(-1)} />
+      <Arrow dir="right" onClick={() => go(1)} />
+      <div onClick={(e) => e.stopPropagation()}
+        style={{ position: 'absolute', bottom: 20, left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: 8 }}>
+        {peers.map((p, i) => (
+          <button key={p} onClick={() => ctx.setFocus(`${sectionId}/${p}`)}
+            style={{ border: 'none', padding: 0, cursor: 'pointer', width: 6, height: 6, borderRadius: 3,
+              background: i === idx ? '#fff' : 'rgba(255,255,255,.3)' }} />
+        ))}
+      </div>
+    </div>,
+    document.body,
+  );
+}
+
+Object.assign(window, { DesignCanvas, DCSection, DCArtboard });
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════
+     TWEAKS PANEL
+════════════════════════════════════════════════════════════ -->
+<script type="text/babel">
+const __TWEAKS_STYLE = `
+  .twk-panel{position:fixed;right:16px;bottom:16px;z-index:2147483646;width:280px;
+    max-height:calc(100vh - 32px);display:flex;flex-direction:column;
+    transform:scale(var(--dc-inv-zoom,1));transform-origin:bottom right;
+    background:rgba(250,249,247,.78);color:#29261b;
+    -webkit-backdrop-filter:blur(24px) saturate(160%);backdrop-filter:blur(24px) saturate(160%);
+    border:.5px solid rgba(255,255,255,.6);border-radius:14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 12px 40px rgba(0,0,0,.18);
+    font:11.5px/1.4 ui-sans-serif,system-ui,-apple-system,sans-serif;overflow:hidden}
+  .twk-hd{display:flex;align-items:center;justify-content:space-between;
+    padding:10px 8px 10px 14px;cursor:move;user-select:none}
+  .twk-hd b{font-size:12px;font-weight:600;letter-spacing:.01em}
+  .twk-x{appearance:none;border:0;background:transparent;color:rgba(41,38,27,.55);
+    width:22px;height:22px;border-radius:6px;cursor:default;font-size:13px;line-height:1}
+  .twk-x:hover{background:rgba(0,0,0,.06);color:#29261b}
+  .twk-body{padding:2px 14px 14px;display:flex;flex-direction:column;gap:10px;
+    overflow-y:auto;overflow-x:hidden;min-height:0}
+  .twk-row{display:flex;flex-direction:column;gap:5px}
+  .twk-row-h{flex-direction:row;align-items:center;justify-content:space-between;gap:10px}
+  .twk-lbl{display:flex;justify-content:space-between;align-items:baseline;color:rgba(41,38,27,.72)}
+  .twk-lbl>span:first-child{font-weight:500}
+  .twk-sect{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    color:rgba(41,38,27,.45);padding:10px 0 0}
+  .twk-sect:first-child{padding-top:0}
+  .twk-seg{position:relative;display:flex;padding:2px;border-radius:8px;
+    background:rgba(0,0,0,.06);user-select:none}
+  .twk-seg-thumb{position:absolute;top:2px;bottom:2px;border-radius:6px;
+    background:rgba(255,255,255,.9);box-shadow:0 1px 2px rgba(0,0,0,.12);
+    transition:left .15s cubic-bezier(.3,.7,.4,1),width .15s}
+  .twk-seg.dragging .twk-seg-thumb{transition:none}
+  .twk-seg button{appearance:none;position:relative;z-index:1;flex:1;border:0;
+    background:transparent;color:inherit;font:inherit;font-weight:500;min-height:22px;
+    border-radius:6px;cursor:default;padding:4px 6px;line-height:1.2;overflow-wrap:anywhere}
+  .twk-toggle{position:relative;width:32px;height:18px;border:0;border-radius:999px;
+    background:rgba(0,0,0,.15);transition:background .15s;cursor:default;padding:0}
+  .twk-toggle[data-on="1"]{background:#34c759}
+  .twk-toggle i{position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;
+    background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s}
+  .twk-toggle[data-on="1"] i{transform:translateX(14px)}
+`;
+
+function useTweaks(defaults) {
+  const [values, setValues] = React.useState(defaults);
+  const setTweak = React.useCallback((keyOrEdits, val) => {
+    const edits = typeof keyOrEdits === 'object' && keyOrEdits !== null
+      ? keyOrEdits : { [keyOrEdits]: val };
+    setValues((prev) => ({ ...prev, ...edits }));
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits }, '*');
+    window.dispatchEvent(new CustomEvent('tweakchange', { detail: edits }));
+  }, []);
+  return [values, setTweak];
+}
+
+function TweaksPanel({ title = 'Tweaks', children }) {
+  const [open, setOpen] = React.useState(false);
+  const dragRef = React.useRef(null);
+  const offsetRef = React.useRef({ x: 16, y: 16 });
+  const PAD = 16;
+
+  const clampToViewport = React.useCallback(() => {
+    const panel = dragRef.current;
+    if (!panel) return;
+    const w = panel.offsetWidth, h = panel.offsetHeight;
+    offsetRef.current = {
+      x: Math.min(Math.max(PAD, window.innerWidth - w - PAD), Math.max(PAD, offsetRef.current.x)),
+      y: Math.min(Math.max(PAD, window.innerHeight - h - PAD), Math.max(PAD, offsetRef.current.y)),
+    };
+    panel.style.right = offsetRef.current.x + 'px';
+    panel.style.bottom = offsetRef.current.y + 'px';
+  }, []);
+
+  React.useEffect(() => {
+    if (!open) return;
+    clampToViewport();
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(clampToViewport) : null;
+    ro?.observe(document.documentElement);
+    return () => ro?.disconnect();
+  }, [open, clampToViewport]);
+
+  React.useEffect(() => {
+    const onMsg = (e) => {
+      const t = e?.data?.type;
+      if (t === '__activate_edit_mode') setOpen(true);
+      else if (t === '__deactivate_edit_mode') setOpen(false);
+    };
+    window.addEventListener('message', onMsg);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', onMsg);
+  }, []);
+
+  const dismiss = () => { setOpen(false); window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*'); };
+
+  const onDragStart = (e) => {
+    const panel = dragRef.current;
+    if (!panel) return;
+    const r = panel.getBoundingClientRect();
+    const sx = e.clientX, sy = e.clientY;
+    const startRight = window.innerWidth - r.right;
+    const startBottom = window.innerHeight - r.bottom;
+    const move = (ev) => {
+      offsetRef.current = { x: startRight - (ev.clientX - sx), y: startBottom - (ev.clientY - sy) };
+      clampToViewport();
+    };
+    const up = () => { window.removeEventListener('mousemove', move); window.removeEventListener('mouseup', up); };
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+  };
+
+  if (!open) return null;
+  return (
+    <>
+      <style>{__TWEAKS_STYLE}</style>
+      <div ref={dragRef} className="twk-panel" style={{ right: offsetRef.current.x, bottom: offsetRef.current.y }}>
+        <div className="twk-hd" onMouseDown={onDragStart}>
+          <b>{title}</b>
+          <button className="twk-x" onMouseDown={(e) => e.stopPropagation()} onClick={dismiss}>✕</button>
+        </div>
+        <div className="twk-body">{children}</div>
+      </div>
+    </>
+  );
+}
+
+function TweakSection({ label, children }) {
+  return (<><div className="twk-sect">{label}</div>{children}</>);
+}
+
+function TweakRow({ label, value, children, inline = false }) {
+  return (
+    <div className={inline ? 'twk-row twk-row-h' : 'twk-row'}>
+      <div className="twk-lbl"><span>{label}</span>{value != null && <span>{value}</span>}</div>
+      {children}
+    </div>
+  );
+}
+
+function TweakToggle({ label, value, onChange }) {
+  return (
+    <div className="twk-row twk-row-h">
+      <div className="twk-lbl"><span>{label}</span></div>
+      <button type="button" className="twk-toggle" data-on={value ? '1' : '0'}
+        role="switch" aria-checked={!!value} onClick={() => onChange(!value)}><i /></button>
+    </div>
+  );
+}
+
+function TweakRadio({ label, value, options, onChange }) {
+  const trackRef = React.useRef(null);
+  const [dragging, setDragging] = React.useState(false);
+  const valueRef = React.useRef(value);
+  valueRef.current = value;
+
+  const labelLen = (o) => String(typeof o === 'object' ? o.label : o).length;
+  const maxLen = options.reduce((m, o) => Math.max(m, labelLen(o)), 0);
+  const fitsAsSegments = maxLen <= ({ 2: 16, 3: 10 }[options.length] ?? 0);
+
+  if (!fitsAsSegments) {
+    return (
+      <TweakRow label={label}>
+        <select className="twk-field" value={value} onChange={(e) => onChange(e.target.value)}
+          style={{ appearance:'none', width:'100%', height:26, padding:'0 8px', border:'.5px solid rgba(0,0,0,.1)', borderRadius:7, background:'rgba(255,255,255,.6)', font:'inherit', outline:'none' }}>
+          {options.map((o) => {
+            const v = typeof o === 'object' ? o.value : o;
+            const l = typeof o === 'object' ? o.label : o;
+            return <option key={v} value={v}>{l}</option>;
+          })}
+        </select>
+      </TweakRow>
+    );
+  }
+
+  const opts = options.map((o) => (typeof o === 'object' ? o : { value: o, label: o }));
+  const idx = Math.max(0, opts.findIndex((o) => o.value === value));
+  const n = opts.length;
+
+  const segAt = (clientX) => {
+    const r = trackRef.current.getBoundingClientRect();
+    const i = Math.floor(((clientX - r.left - 2) / (r.width - 4)) * n);
+    return opts[Math.max(0, Math.min(n - 1, i))].value;
+  };
+
+  const onPointerDown = (e) => {
+    setDragging(true);
+    const v0 = segAt(e.clientX);
+    if (v0 !== valueRef.current) onChange(v0);
+    const move = (ev) => { const v = segAt(ev.clientX); if (v !== valueRef.current) onChange(v); };
+    const up = () => { setDragging(false); window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  };
+
+  return (
+    <TweakRow label={label}>
+      <div ref={trackRef} role="radiogroup" onPointerDown={onPointerDown}
+        className={dragging ? 'twk-seg dragging' : 'twk-seg'}>
+        <div className="twk-seg-thumb"
+          style={{ left: `calc(2px + ${idx} * (100% - 4px) / ${n})`, width: `calc((100% - 4px) / ${n})` }} />
+        {opts.map((o) => (
+          <button key={o.value} type="button" role="radio" aria-checked={o.value === value}>{o.label}</button>
+        ))}
+      </div>
+    </TweakRow>
+  );
+}
+
+Object.assign(window, { useTweaks, TweaksPanel, TweakSection, TweakRow, TweakRadio, TweakToggle });
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════
+     ICONS
+════════════════════════════════════════════════════════════ -->
+<script type="text/babel">
+function makeIcon(paths) {
+  return function Icon({ size = 24, color = 'currentColor', strokeWidth = 2, style, fill }) {
+    return (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill || "none"}
+        stroke={color} strokeWidth={strokeWidth}
+        strokeLinecap="round" strokeLinejoin="round" style={style}
+        dangerouslySetInnerHTML={{ __html: paths }}
+      />
+    );
+  };
+}
+
+window.lucide = {
+  Home:          makeIcon('<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><polyline points="9 22 9 12 15 12 15 22"/>'),
+  ShoppingBag:   makeIcon('<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>'),
+  Plus:          makeIcon('<path d="M5 12h14"/><path d="M12 5v14"/>'),
+  Minus:         makeIcon('<path d="M5 12h14"/>'),
+  Package:       makeIcon('<path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>'),
+  PiggyBank:     makeIcon('<path d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8.6 3.4 2 4.5V17a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-.5c1.4 0 2.6-.4 4-1.5h1.5a2.5 2.5 0 0 0 2.5-2.5v-2c0-.4 1-.6 1.5-1 1.4-1 2-2.5 2-4-1 .5-2.5 1-4 1Z"/><path d="M2 9v1c0 1.1.9 2 2 2h1"/><path d="M16 11h.01"/>'),
+  Bell:          makeIcon('<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>'),
+  Sparkles:      makeIcon('<path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/>'),
+  Heart:         makeIcon('<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>'),
+  Coffee:        makeIcon('<path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" x2="6" y1="2" y2="4"/><line x1="10" x2="10" y1="2" y2="4"/><line x1="14" x2="14" y1="2" y2="4"/>'),
+  Truck:         makeIcon('<path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/>'),
+  Ticket:        makeIcon('<path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/>'),
+  Hammer:        makeIcon('<path d="m15 12-8.5 8.5a2.12 2.12 0 1 1-3-3L12 9"/><path d="M17.64 15 22 10.64"/><path d="m20.91 11.7-1.25-1.25c-.6-.6-.93-1.4-.93-2.25v-.86L16.01 4.6a5.56 5.56 0 0 0-3.94-1.64H9l.92.82A6.18 6.18 0 0 1 12 8.4v1.56l2 2h2.47l2.26 1.91"/>'),
+  Search:        makeIcon('<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>'),
+  Filter:        makeIcon('<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>'),
+  AlertTriangle: makeIcon('<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/>'),
+  X:             makeIcon('<path d="M18 6 6 18"/><path d="m6 6 12 12"/>'),
+  Calendar:      makeIcon('<path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/>'),
+  Check:         makeIcon('<path d="M20 6 9 17l-5-5"/>'),
+  ChevronDown:   makeIcon('<path d="m6 9 6 6 6-6"/>'),
+  Star:          makeIcon('<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>'),
+  Zap:           makeIcon('<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>'),
+};
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SCREENS  (Russian · Animated · Gradient Dark · Sell Filters)
+════════════════════════════════════════════════════════════ -->
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+// ── Fonts ─────────────────────────────────────────────────────────────────────
+const FONT    = '"Nunito", system-ui, sans-serif';
+const DISPLAY = '"Comfortaa", "Nunito", sans-serif';
+const MONO    = '"JetBrains Mono", ui-monospace, monospace';
+
+// ── Theme palette ─────────────────────────────────────────────────────────────
+const THEMES = {
+  light: {
+    bg: '#FFF8F0',
+    bgImage: undefined,
+    surface: '#FFFFFF',
+    surfaceAlt: '#FFF1E6',
+    heroGrad: null,
+    metricGrad1: null,
+    metricGrad2: null,
+    cardSurface: '#FFFFFF',
+    ink: '#3A2E2A',
+    ink2: '#7A6A62',
+    ink3: '#B5A89F',
+    line: '#F2E6D8',
+    lineSoft: '#FAF0E4',
+    primary:       'oklch(0.62 0.15 340)',
+    primarySoft:   'oklch(0.96 0.04 340)',
+    primaryBorder: 'oklch(0.86 0.08 340)',
+    mint:       'oklch(0.72 0.10 165)', mintSoft:   'oklch(0.95 0.05 165)',
+    butter:     'oklch(0.84 0.12 95)',  butterSoft: 'oklch(0.97 0.06 95)',
+    sky:        'oklch(0.72 0.09 230)', skySoft:    'oklch(0.95 0.04 230)',
+    coral:      'oklch(0.65 0.16 30)',  coralSoft:  'oklch(0.95 0.05 30)',
+    lavender:   'oklch(0.72 0.12 295)', lavenderSoft: 'oklch(0.95 0.05 295)',
+    shadow: '0 4px 16px rgba(180,120,100,0.08)',
+    cardShadow: '0 1px 0 rgba(255,255,255,0.8) inset, 0 2px 8px rgba(180,120,100,0.06)',
+  },
+  dark: {
+    bg: '#18141F',
+    bgImage: 'linear-gradient(150deg, #1C1530 0%, #18141F 45%, #181C28 100%)',
+    surface: '#251F2E',
+    surfaceAlt: '#2D2440',
+    heroGrad: 'linear-gradient(135deg, oklch(0.52 0.26 340) 0%, oklch(0.44 0.24 305) 45%, oklch(0.48 0.22 268) 100%)',
+    metricGrad1: 'linear-gradient(135deg, oklch(0.24 0.11 165) 0%, oklch(0.20 0.08 205) 100%)',
+    metricGrad2: 'linear-gradient(135deg, oklch(0.24 0.12 30) 0%, oklch(0.20 0.09 55) 100%)',
+    cardSurface: 'linear-gradient(145deg, #2E2642 0%, #231D33 100%)',
+    ink: '#F0E8FF',
+    ink2: '#C0AADC',
+    ink3: '#7C6E95',
+    line: '#3D3058',
+    lineSoft: '#2D2444',
+    primary:       'oklch(0.82 0.20 340)',
+    primarySoft:   'oklch(0.24 0.12 340)',
+    primaryBorder: 'oklch(0.48 0.18 340)',
+    mint:       'oklch(0.84 0.18 165)', mintSoft:   'oklch(0.22 0.10 165)',
+    butter:     'oklch(0.88 0.17 95)',  butterSoft: 'oklch(0.26 0.10 95)',
+    sky:        'oklch(0.84 0.16 230)', skySoft:    'oklch(0.22 0.09 230)',
+    coral:      'oklch(0.84 0.22 30)',  coralSoft:  'oklch(0.24 0.12 30)',
+    lavender:   'oklch(0.84 0.20 295)', lavenderSoft: 'oklch(0.24 0.12 295)',
+    shadow: '0 8px 32px rgba(0,0,0,0.60)',
+    cardShadow: '0 1px 0 rgba(255,255,255,0.04) inset, 0 4px 20px rgba(0,0,0,0.50)',
+  },
+};
+window.THEMES = THEMES;
+
+// ── Decorative blob ───────────────────────────────────────────────────────────
+function Blob({ color, style }) {
+  return (
+    <svg viewBox="0 0 100 100" style={{ position: 'absolute', pointerEvents: 'none', ...style }} aria-hidden>
+      <path d="M50,10 C70,8 90,25 88,48 C86,70 70,90 48,88 C26,86 10,70 12,48 C14,26 30,12 50,10 Z" fill={color}/>
+    </svg>
+  );
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+const anim = (i, extra = '') =>
+  `mfadeUp 0.38s cubic-bezier(.22,.8,.34,1) ${i * 0.07}s both${extra ? ', ' + extra : ''}`;
+
+// Card surface (gradient in dark mode)
+const cardBg = (T, dark) => dark ? T.cardSurface : T.surface;
+
+// ── Bottom Nav ────────────────────────────────────────────────────────────────
+function BottomNav({ active = 'dashboard', T, dark }) {
+  const { Home, ShoppingBag, Plus, Package, PiggyBank } = lucide;
+  const items = [
+    { id: 'dashboard', label: 'Главная',  icon: Home },
+    { id: 'sell',      label: 'Продать',  icon: ShoppingBag },
+    { id: 'add',       label: '',         icon: Plus, primary: true },
+    { id: 'inventory', label: 'Склад',    icon: Package },
+    { id: 'expenses',  label: 'Финансы',  icon: PiggyBank },
+  ];
+  return (
+    <div style={{
+      position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 30,
+      paddingBottom: 28, paddingTop: 10,
+      background: cardBg(T, dark),
+      borderTop: `1px solid ${T.line}`,
+      display: 'flex', alignItems: 'center', justifyContent: 'space-around',
+      borderRadius: '28px 28px 0 0',
+      boxShadow: T.shadow,
+    }}>
+      {items.map(({ id, label, icon: Icon, primary }) => {
+        const isActive = id === active;
+        if (primary) {
+          return (
+            <div key={id} style={{
+              width: 66, height: 66, borderRadius: 24,
+              background: T.primary, color: '#fff',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: `0 10px 26px ${T.primary}55, 0 0 0 5px ${cardBg(T, dark)}`,
+              marginTop: -22, position: 'relative',
+              animation: 'mbobFloat 3.5s ease-in-out infinite',
+            }}>
+              <Icon size={34} strokeWidth={2.8}/>
+              <div style={{
+                position: 'absolute', top: -5, right: -5, width: 16, height: 16,
+                background: T.butter, borderRadius: 5, transform: 'rotate(45deg)',
+                border: `2.5px solid ${cardBg(T, dark)}`,
+              }}/>
+            </div>
+          );
+        }
+        return (
+          <div key={id} style={{
+            display: 'flex', flexDirection: 'column', alignItems: 'center',
+            gap: 3, padding: '4px 12px', minWidth: 58,
+          }}>
+            <div style={{
+              width: 44, height: 44, borderRadius: 16,
+              background: isActive ? T.primarySoft : 'transparent',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              transition: 'background 0.22s ease',
+            }}>
+              <Icon size={27} strokeWidth={isActive ? 2.8 : 2} color={isActive ? T.primary : T.ink3}/>
+            </div>
+            <span style={{ fontFamily: FONT, fontSize: 11, fontWeight: 700, color: isActive ? T.primary : T.ink3 }}>
+              {label}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// ── Phone shell ───────────────────────────────────────────────────────────────
+function Phone({ children, navActive, modal, T, dark }) {
+  return (
+    <IOSDevice dark={dark}>
+      <div style={{
+        position: 'absolute', inset: 0,
+        background: T.bg,
+        backgroundImage: dark ? T.bgImage : undefined,
+        fontFamily: FONT, color: T.ink,
+        display: 'flex', flexDirection: 'column',
+      }}>
+        {children}
+      </div>
+      {modal}
+      {navActive !== null && <BottomNav active={navActive} T={T} dark={dark}/>}
+    </IOSDevice>
+  );
+}
+
+// ════════════════════════════════════════════════════════════
+// 1. DASHBOARD
+// ════════════════════════════════════════════════════════════
+function Dashboard({ T, dark }) {
+  const { Bell, Sparkles, Heart } = lucide;
+
+  return (
+    <Phone navActive="dashboard" T={T} dark={dark}>
+      {/* Header */}
+      <div style={{ animation: anim(0), padding: '60px 22px 4px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div>
+          <div style={{ fontSize: 14, color: T.ink2, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}>
+            Привет! <span style={{ fontSize: 16 }}>👋</span>
+          </div>
+          <div style={{ fontFamily: DISPLAY, fontSize: 26, fontWeight: 700, letterSpacing: -0.3, marginTop: 2 }}>
+            Аниме Бостон · День 2
+          </div>
+        </div>
+        <div style={{
+          width: 46, height: 46, borderRadius: 16,
+          background: cardBg(T, dark),
+          border: `1.5px solid ${T.line}`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          position: 'relative', boxShadow: T.cardShadow,
+        }}>
+          <Bell size={20} strokeWidth={2.3} color={T.ink}/>
+          <div style={{ position: 'absolute', top: 10, right: 11, width: 9, height: 9,
+            borderRadius: 5, background: T.coral, border: `2px solid ${cardBg(T, dark)}` }}/>
+        </div>
+      </div>
+
+      {/* Hero card */}
+      <div style={{ animation: anim(1), padding: '14px 20px 0' }}>
+        <div style={{
+          background: dark ? T.heroGrad : T.primary,
+          backgroundSize: '200% 200%',
+          animation: 'mGradShift 7s ease infinite',
+          borderRadius: 28, padding: '20px 22px 22px',
+          color: '#fff', position: 'relative', overflow: 'hidden',
+        }}>
+          <Blob color="rgba(255,255,255,0.13)" style={{ width: 115, height: 115, top: -28, right: -22 }}/>
+          <Blob color="rgba(255,255,255,0.07)" style={{ width: 72, height: 72, bottom: -22, right: 72 }}/>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, position: 'relative' }}>
+            <span style={{ display: 'inline-block', animation: 'mStarPulse 2.4s ease-in-out infinite' }}>
+              <Sparkles size={16} strokeWidth={2.5}/>
+            </span>
+            <span style={{ fontSize: 12, fontWeight: 800, letterSpacing: 0.5, textTransform: 'uppercase', opacity: 0.9 }}>
+              Ты заработала сегодня
+            </span>
+          </div>
+          <div style={{ fontFamily: DISPLAY, fontSize: 48, fontWeight: 700, marginTop: 8, letterSpacing: -1.5, lineHeight: 1, position: 'relative' }}>
+            $1&nbsp;284<span style={{ fontSize: 26, opacity: 0.7 }}>.50</span>
+          </div>
+          <div style={{ marginTop: 12, display: 'flex', alignItems: 'center', gap: 8, position: 'relative' }}>
+            <div style={{
+              padding: '6px 12px', borderRadius: 999,
+              background: 'rgba(255,255,255,0.22)',
+              fontSize: 12, fontWeight: 700,
+              display: 'flex', alignItems: 'center', gap: 4,
+            }}>
+              📈 +18% вчера
+            </div>
+            <span style={{ fontSize: 12, fontWeight: 600, opacity: 0.85 }}>отлично!</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Metric cards */}
+      <div style={{ animation: anim(2), padding: '14px 20px 0', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+        <div style={{
+          background: dark ? T.metricGrad1 : T.mintSoft,
+          borderRadius: 22, padding: '14px 14px 16px',
+          border: `1.5px solid ${T.mint}40`, position: 'relative', overflow: 'hidden',
+        }}>
+          <Blob color={`${T.mint}28`} style={{ width: 55, height: 55, bottom: -18, right: -18 }}/>
+          <div style={{ fontSize: 10, fontWeight: 800, color: T.mint, letterSpacing: 0.5, textTransform: 'uppercase' }}>ПРОДАЖИ</div>
+          <div style={{ fontFamily: DISPLAY, fontSize: 24, fontWeight: 700, marginTop: 4, color: T.ink, letterSpacing: -0.5 }}>$2 140</div>
+          <div style={{ fontSize: 11, color: T.ink2, marginTop: 4, fontWeight: 600 }}>54 покупателя ✨</div>
+        </div>
+        <div style={{
+          background: dark ? T.metricGrad2 : T.butterSoft,
+          borderRadius: 22, padding: '14px 14px 16px',
+          border: `1.5px solid ${T.butter}40`, position: 'relative', overflow: 'hidden',
+        }}>
+          <Blob color={`${T.butter}30`} style={{ width: 55, height: 55, bottom: -18, right: -18 }}/>
+          <div style={{ fontSize: 10, fontWeight: 800, color: T.coral, letterSpacing: 0.5, textTransform: 'uppercase' }}>РАСХОДЫ</div>
+          <div style={{ fontFamily: DISPLAY, fontSize: 24, fontWeight: 700, marginTop: 4, color: T.ink, letterSpacing: -0.5 }}>$855.50</div>
+          <div style={{ fontSize: 11, color: T.ink2, marginTop: 4, fontWeight: 600 }}>стенд + перекусы 🥐</div>
+        </div>
+      </div>
+
+      {/* Top sellers */}
+      <div style={{ animation: anim(3), padding: '20px 20px 0' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <Heart size={18} color={T.primary} strokeWidth={2.5} fill={T.primary}/>
+            <span style={{ fontFamily: DISPLAY, fontSize: 18, fontWeight: 700 }}>Народные фавориты</span>
+          </div>
+          <span style={{ fontSize: 12, color: T.primary, fontWeight: 700 }}>все</span>
+        </div>
+        <div style={{
+          background: cardBg(T, dark), borderRadius: 20,
+          border: `1.5px solid ${T.line}`, overflow: 'hidden',
+          boxShadow: T.cardShadow,
+        }}>
+          {[
+            { n: 'Брелок Тодзи акрил', sold: 24, rev: '$192', emoji: '🌸' },
+            { n: 'Голо-набор стикеров', sold: 18, rev: '$108', emoji: '✨' },
+            { n: 'Принт Годзё А4',     sold: 11, rev: '$165', emoji: '💜' },
+          ].map((item, i, arr) => (
+            <div key={i} style={{
+              animation: anim(4 + i),
+              display: 'flex', alignItems: 'center', gap: 12,
+              padding: '12px 16px',
+              borderBottom: i < arr.length - 1 ? `1px solid ${T.lineSoft}` : 'none',
+            }}>
+              <div style={{
+                width: 42, height: 42, borderRadius: 14,
+                background: [T.primarySoft, T.skySoft, T.lavenderSoft][i],
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 20,
+              }}>{item.emoji}</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 14, fontWeight: 700 }}>{item.n}</div>
+                <div style={{ fontSize: 12, color: T.ink3, marginTop: 1, fontWeight: 600 }}>{item.sold} продано ✨</div>
+              </div>
+              <div style={{ fontFamily: DISPLAY, fontSize: 16, fontWeight: 700, color: T.ink }}>{item.rev}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ height: 110 }}/>
+    </Phone>
+  );
+}
+
+// ════════════════════════════════════════════════════════════
+// 2. SELL  (with type filters)
+// ════════════════════════════════════════════════════════════
+function Sell({ T, dark }) {
+  const { Search, ShoppingBag, Plus, Minus } = lucide;
+  const [activeFilter, setActiveFilter] = useState('Все');
+  const [counts, setCounts] = useState({});
+
+  const FILTERS = ['Все', 'Чармы', 'Принты', 'Стикеры', 'Значки', 'Брелки'];
+
+  const ALL_ITEMS = [
+    { name: 'Брелок Тодзи акрил', price: 8,  stock: 23, emoji: '🌸', color: 'primary',  type: 'Чармы'  },
+    { name: 'Брелок Годзё акрил', price: 8,  stock: 31, emoji: '💜', color: 'lavender', type: 'Чармы'  },
+    { name: 'Голо-набор стикеров',price: 6,  stock: 47, emoji: '✨', color: 'sky',      type: 'Стикеры'},
+    { name: 'Принт Юдзи А4',      price: 15, stock: 8,  emoji: '🍡', color: 'coral',    type: 'Принты' },
+    { name: 'Принт Годзё А4',     price: 15, stock: 12, emoji: '🌙', color: 'mint',     type: 'Принты' },
+    { name: 'Брелок Незуко',       price: 7,  stock: 19, emoji: '🌷', color: 'primary',  type: 'Брелки' },
+    { name: 'Значок Фрирен',       price: 5,  stock: 28, emoji: '⭐', color: 'butter',   type: 'Значки' },
+  ];
+
+  const items = activeFilter === 'Все' ? ALL_ITEMS : ALL_ITEMS.filter(it => it.type === activeFilter);
+
+  const inc = (name) => setCounts(c => ({ ...c, [name]: (c[name] || 0) + 1 }));
+  const dec = (name) => setCounts(c => ({ ...c, [name]: Math.max(0, (c[name] || 0) - 1) }));
+
+  const cartCount = Object.values(counts).reduce((a, b) => a + b, 0);
+  const cartTotal = ALL_ITEMS.reduce((sum, it) => sum + it.price * (counts[it.name] || 0), 0);
+
+  return (
+    <Phone navActive="sell" T={T} dark={dark}>
+      {/* Header */}
+      <div style={{ animation: anim(0), padding: '60px 22px 12px' }}>
+        <div style={{ fontSize: 13, color: T.ink2, fontWeight: 600 }}>нажми, чтобы добавить 🛍️</div>
+        <div style={{ fontFamily: DISPLAY, fontSize: 30, fontWeight: 700, letterSpacing: -0.4, marginTop: 2 }}>
+          Давай продавать!
+        </div>
+      </div>
+
+      {/* Search */}
+      <div style={{ animation: anim(1), padding: '0 20px 10px' }}>
+        <div style={{
+          background: cardBg(T, dark), border: `1.5px solid ${T.line}`,
+          borderRadius: 16, padding: '13px 14px',
+          display: 'flex', alignItems: 'center', gap: 10,
+          boxShadow: T.cardShadow,
+        }}>
+          <Search size={19} color={T.ink3} strokeWidth={2.2}/>
+          <span style={{ fontSize: 15, color: T.ink3, fontWeight: 600 }}>Ищешь что-то?</span>
+        </div>
+      </div>
+
+      {/* Filter pills */}
+      <div style={{ animation: anim(2), padding: '0 20px 12px' }}>
+        <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 2, scrollbarWidth: 'none' }}>
+          {FILTERS.map(f => {
+            const isA = f === activeFilter;
+            return (
+              <button key={f} onClick={() => setActiveFilter(f)} style={{
+                flexShrink: 0, padding: '7px 16px', borderRadius: 999,
+                background: isA ? T.primary : cardBg(T, dark),
+                color: isA ? '#fff' : T.ink2,
+                border: isA ? 'none' : `1.5px solid ${T.line}`,
+                fontFamily: FONT, fontSize: 13, fontWeight: 700,
+                boxShadow: isA ? `0 4px 16px ${T.primary}45` : T.cardShadow,
+                transition: 'all 0.22s ease',
+              }}>{f}</button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Item list */}
+      <div style={{ flex: 1, overflow: 'auto', padding: '0 16px 200px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {items.map((it, i) => {
+            const tone = T[it.color + 'Soft'] || T.primarySoft;
+            const count = counts[it.name] || 0;
+            return (
+              <div key={it.name} style={{
+                animation: anim(i),
+                background: cardBg(T, dark),
+                borderRadius: 20,
+                border: count ? `2px solid ${T.primary}` : `1.5px solid ${T.line}`,
+                padding: '12px 14px',
+                display: 'flex', alignItems: 'center', gap: 12,
+                minHeight: 72,
+                boxShadow: count ? `${T.cardShadow}, 0 0 0 4px ${T.primarySoft}` : T.cardShadow,
+                transition: 'border-color 0.2s, box-shadow 0.2s',
+              }}>
+                <div style={{
+                  width: 54, height: 54, borderRadius: 18,
+                  background: tone, flexShrink: 0,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 27,
+                }}>{it.emoji}</div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 15, fontWeight: 700, lineHeight: 1.25 }}>{it.name}</div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4 }}>
+                    <span style={{ fontFamily: DISPLAY, fontSize: 17, fontWeight: 700, color: T.primary }}>${it.price}</span>
+                    <span style={{ fontSize: 11, color: T.ink3, fontWeight: 600 }}>· {it.stock} шт.</span>
+                  </div>
+                </div>
+                {count > 0 ? (
+                  <div style={{
+                    display: 'flex', alignItems: 'center',
+                    background: T.primarySoft, borderRadius: 14, padding: 3,
+                  }}>
+                    <button onClick={() => dec(it.name)} style={{
+                      width: 38, height: 38, border: 'none', background: 'transparent',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    }}><Minus size={20} color={T.primary} strokeWidth={2.8}/></button>
+                    <span style={{
+                      fontFamily: DISPLAY, fontSize: 19, fontWeight: 700, color: T.primary,
+                      minWidth: 26, textAlign: 'center',
+                    }}>{count}</span>
+                    <button onClick={() => inc(it.name)} style={{
+                      width: 38, height: 38, border: 'none',
+                      background: T.primary, borderRadius: 11, color: '#fff',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    }}><Plus size={20} strokeWidth={2.8}/></button>
+                  </div>
+                ) : (
+                  <button onClick={() => inc(it.name)} style={{
+                    width: 50, height: 50, border: `1.5px dashed ${T.primaryBorder}`,
+                    background: T.primarySoft,
+                    borderRadius: 16, color: T.primary,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    transition: 'all 0.18s ease',
+                  }}><Plus size={24} strokeWidth={2.8}/></button>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Cart bar */}
+      {cartCount > 0 && (
+        <div style={{
+          position: 'absolute', bottom: 94, left: 16, right: 16, zIndex: 20,
+          background: T.ink, color: T.bg, borderRadius: 22,
+          padding: '14px 18px',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          boxShadow: '0 14px 40px rgba(0,0,0,0.28)',
+          animation: anim(0),
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{
+              width: 42, height: 42, borderRadius: 13,
+              background: T.primary, color: '#fff',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              position: 'relative',
+            }}>
+              <ShoppingBag size={20} strokeWidth={2.4}/>
+              <div style={{
+                position: 'absolute', top: -5, right: -5,
+                background: T.butter, color: T.ink,
+                fontSize: 10, fontWeight: 800, fontFamily: FONT,
+                width: 20, height: 20, borderRadius: 10,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                border: `2px solid ${T.ink}`,
+                animation: 'mCartBounce 0.32s cubic-bezier(.2,.8,.4,1)',
+              }}>{cartCount}</div>
+            </div>
+            <div>
+              <div style={{ fontSize: 11, opacity: 0.6, fontWeight: 600 }}>твоя корзина</div>
+              <div style={{ fontFamily: DISPLAY, fontSize: 18, fontWeight: 700 }}>${cartTotal}.00</div>
+            </div>
+          </div>
+          <div style={{
+            background: T.primary, color: '#fff',
+            borderRadius: 14, padding: '11px 20px',
+            fontSize: 14, fontWeight: 800,
+          }}>Оформить →</div>
+        </div>
+      )}
+    </Phone>
+  );
+}
+
+// ════════════════════════════════════════════════════════════
+// 3. INVENTORY
+// ════════════════════════════════════════════════════════════
+function Inventory({ T, dark }) {
+  const { Filter, AlertTriangle, Sparkles } = lucide;
+
+  const items = [
+    { name: 'Брелок Тодзи акрил', stock: 23, low: false, fandom: 'ДКК',     type: 'Чарм',   emoji: '🌸', color: 'primary' },
+    { name: 'Принт Юдзи А4',      stock: 8,  low: true,  fandom: 'ДКК',     type: 'Принт',  emoji: '🍡', color: 'coral'   },
+    { name: 'Голо-набор стикеров', stock: 47, low: false, fandom: 'Микс',    type: 'Стикер', emoji: '✨', color: 'sky'     },
+    { name: 'Брелок Незуко',       stock: 4,  low: true,  fandom: 'КнЯ',     type: 'Брелок', emoji: '🌷', color: 'primary' },
+    { name: 'Значок Фрирен',       stock: 28, low: false, fandom: 'Фрирен',  type: 'Значок', emoji: '⭐', color: 'butter'  },
+  ];
+
+  const Badge = ({ children, tone }) => {
+    const tones = {
+      fandom: { bg: T.lavenderSoft, fg: T.lavender },
+      type:   { bg: T.skySoft,      fg: T.sky      },
+    };
+    const t = tones[tone];
+    return (
+      <span style={{
+        background: t.bg, color: t.fg,
+        padding: '4px 10px', borderRadius: 999,
+        fontSize: 11, fontWeight: 800, letterSpacing: 0.1, whiteSpace: 'nowrap',
+      }}>{children}</span>
+    );
+  };
+
+  return (
+    <Phone navActive="inventory" T={T} dark={dark}>
+      <div style={{ animation: anim(0), padding: '60px 22px 8px', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+        <div>
+          <div style={{ fontSize: 13, color: T.ink2, fontWeight: 600 }}>все твои товары 📦</div>
+          <div style={{ fontFamily: DISPLAY, fontSize: 30, fontWeight: 700, marginTop: 2 }}>Склад</div>
+        </div>
+        <div style={{
+          width: 46, height: 46, borderRadius: 16,
+          background: cardBg(T, dark), border: `1.5px solid ${T.line}`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          boxShadow: T.cardShadow,
+        }}>
+          <Filter size={20} strokeWidth={2.2}/>
+        </div>
+      </div>
+
+      {/* Summary */}
+      <div style={{ animation: anim(1), padding: '8px 20px 12px', display: 'flex', gap: 10 }}>
+        <div style={{
+          flex: 1,
+          background: dark ? T.metricGrad1 : T.mintSoft,
+          border: `1.5px solid ${T.mint}40`,
+          borderRadius: 16, padding: '12px 14px', position: 'relative', overflow: 'hidden',
+        }}>
+          <div style={{ fontSize: 10, color: T.mint, fontWeight: 800, textTransform: 'uppercase', letterSpacing: 0.5 }}>ВСЕГО ТОВАРОВ</div>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginTop: 2 }}>
+            <div style={{ fontFamily: DISPLAY, fontSize: 22, fontWeight: 700, color: T.ink }}>312</div>
+            <span style={{ display: 'inline-block', animation: 'mStarPulse 2.6s ease-in-out infinite' }}>
+              <Sparkles size={12} color={T.mint} strokeWidth={2.5}/>
+            </span>
+          </div>
+        </div>
+        <div style={{
+          flex: 1,
+          background: dark ? T.metricGrad2 : T.coralSoft,
+          border: `1.5px solid ${T.coral}40`,
+          borderRadius: 16, padding: '12px 14px',
+        }}>
+          <div style={{ fontSize: 10, color: T.coral, fontWeight: 800, display: 'flex', alignItems: 'center', gap: 4, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+            <AlertTriangle size={11} strokeWidth={2.6}/> ЗАКАНЧИВАЕТСЯ
+          </div>
+          <div style={{ fontFamily: DISPLAY, fontSize: 22, fontWeight: 700, marginTop: 2, color: T.coral }}>2 позиции</div>
+        </div>
+      </div>
+
+      {/* Item cards */}
+      <div style={{ flex: 1, overflow: 'auto', padding: '0 16px 120px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {items.map((it, i) => {
+            const tone = T[it.color + 'Soft'] || T.primarySoft;
+            return (
+              <div key={i} style={{
+                animation: anim(2 + i),
+                background: cardBg(T, dark), borderRadius: 22, padding: '14px',
+                border: it.low ? `2px solid ${T.coral}55` : `1.5px solid ${T.line}`,
+                display: 'flex', gap: 12,
+                boxShadow: T.cardShadow,
+                position: 'relative', overflow: 'hidden',
+              }}>
+                {it.low && (
+                  <div style={{
+                    position: 'absolute', top: 10, right: 10,
+                    background: T.coralSoft, color: T.coral,
+                    fontSize: 10, fontWeight: 800,
+                    padding: '3px 9px', borderRadius: 999,
+                    display: 'flex', alignItems: 'center', gap: 3,
+                  }}>
+                    <AlertTriangle size={10} strokeWidth={2.6}/> мало!
+                  </div>
+                )}
+                <div style={{
+                  width: 72, height: 72, borderRadius: 20,
+                  background: tone, flexShrink: 0,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 34,
+                }}>{it.emoji}</div>
+                <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                  <div>
+                    <div style={{ fontSize: 15, fontWeight: 700, lineHeight: 1.25 }}>{it.name}</div>
+                    <div style={{ display: 'flex', gap: 6, marginTop: 6, flexWrap: 'wrap' }}>
+                      <Badge tone="fandom">{it.fandom}</Badge>
+                      <Badge tone="type">{it.type}</Badge>
+                    </div>
+                  </div>
+                  <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <span style={{ fontFamily: DISPLAY, fontSize: 19, fontWeight: 700, color: it.low ? T.coral : T.ink }}>
+                      {it.stock}
+                    </span>
+                    <span style={{ fontSize: 12, color: it.low ? T.coral : T.ink2, fontWeight: 600 }}>в наличии</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </Phone>
+  );
+}
+
+// ════════════════════════════════════════════════════════════
+// 4. ADD EXPENSE MODAL
+// ════════════════════════════════════════════════════════════
+function ExpenseModal({ T, dark }) {
+  const { X, Calendar, Check, Truck, Ticket, Hammer, Coffee } = lucide;
+
+  const Field = ({ label, value, placeholder, icon: Icon, active, mono }) => (
+    <div style={{ marginBottom: 14 }}>
+      <div style={{ fontSize: 12, fontWeight: 700, color: T.ink2, marginBottom: 6 }}>{label}</div>
+      <div style={{
+        background: cardBg(T, dark), borderRadius: 16,
+        border: active ? `2px solid ${T.primary}` : `1.5px solid ${T.line}`,
+        padding: '14px 16px',
+        display: 'flex', alignItems: 'center', gap: 10,
+        boxShadow: active ? `0 0 0 4px ${T.primarySoft}` : T.cardShadow,
+        transition: 'all 0.2s ease',
+      }}>
+        {Icon && <Icon size={18} color={active ? T.primary : T.ink3} strokeWidth={2.2}/>}
+        <span style={{
+          flex: 1, fontFamily: mono ? DISPLAY : FONT,
+          fontSize: mono ? 24 : 15, fontWeight: 600,
+          color: value ? T.ink : T.ink3,
+          letterSpacing: mono ? -0.4 : 0,
+        }}>
+          {value || placeholder}
+        </span>
+      </div>
+    </div>
+  );
+
+  const cats = [
+    { l: 'Логистика',    icon: Truck,  sel: true,  color: 'sky'    },
+    { l: 'Взносы',       icon: Ticket, sel: false, color: 'primary' },
+    { l: 'Производство', icon: Hammer, sel: false, color: 'butter' },
+    { l: 'Еда',          icon: Coffee, sel: false, color: 'mint'   },
+  ];
+
+  return (
+    <Phone navActive={null} T={T} dark={dark} modal={
+      <>
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'rgba(16,10,28,0.55)',
+          zIndex: 40, backdropFilter: 'blur(3px)',
+          animation: 'mfadeIn 0.22s ease both',
+        }}/>
+        <div style={{
+          position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 50,
+          background: dark ? undefined : T.bg,
+          backgroundImage: dark ? 'linear-gradient(180deg, #241A38 0%, #18141F 100%)' : undefined,
+          borderRadius: '32px 32px 0 0',
+          padding: '10px 22px 36px',
+          maxHeight: '90%',
+          display: 'flex', flexDirection: 'column',
+          boxShadow: '0 -12px 50px rgba(0,0,0,0.22)',
+          animation: 'mSlideInModal 0.36s cubic-bezier(.22,.8,.34,1) both',
+        }}>
+          {/* Drag handle */}
+          <div style={{ display: 'flex', justifyContent: 'center', padding: '6px 0 16px' }}>
+            <div style={{ width: 44, height: 5, borderRadius: 4, background: T.line }}/>
+          </div>
+
+          {/* Header */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: T.ink2 }}>куда ушло? 💸</div>
+              <div style={{ fontFamily: DISPLAY, fontSize: 24, fontWeight: 700, marginTop: 2 }}>Записать расход</div>
+            </div>
+            <div style={{
+              width: 40, height: 40, borderRadius: 14,
+              background: cardBg(T, dark), border: `1.5px solid ${T.line}`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: T.cardShadow,
+            }}>
+              <X size={18} strokeWidth={2.4}/>
+            </div>
+          </div>
+
+          {/* Type toggle */}
+          <div style={{
+            display: 'flex', background: T.surfaceAlt, borderRadius: 14,
+            padding: 4, marginBottom: 18,
+          }}>
+            {[{ l: 'Расход', sel: true, emoji: '💸' }, { l: 'Доход', sel: false, emoji: '💰' }].map((tab) => (
+              <div key={tab.l} style={{
+                flex: 1, textAlign: 'center', padding: '10px 0', borderRadius: 11,
+                background: tab.sel ? cardBg(T, dark) : 'transparent',
+                color: tab.sel ? T.ink : T.ink3,
+                fontSize: 13, fontWeight: 700,
+                boxShadow: tab.sel ? T.cardShadow : 'none',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+              }}>
+                <span>{tab.emoji}</span>{tab.l}
+              </div>
+            ))}
+          </div>
+
+          <Field label="Сколько?" value="$124.50" active mono/>
+
+          <div style={{ fontSize: 12, fontWeight: 700, color: T.ink2, marginBottom: 8 }}>Категория?</div>
+          <div style={{ marginBottom: 18, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+            {cats.map(c => {
+              const tone = T[c.color + 'Soft'];
+              const fg = T[c.color];
+              return (
+                <div key={c.l} style={{
+                  padding: '12px 14px', borderRadius: 16,
+                  background: c.sel ? cardBg(T, dark) : tone,
+                  border: c.sel ? `2px solid ${T.primary}` : `1.5px solid ${tone}`,
+                  fontSize: 13, fontWeight: 700,
+                  display: 'flex', alignItems: 'center', gap: 10,
+                  boxShadow: c.sel ? `0 0 0 4px ${T.primarySoft}` : 'none',
+                  transition: 'all 0.2s ease',
+                }}>
+                  <div style={{
+                    width: 32, height: 32, borderRadius: 10,
+                    background: tone, color: fg,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  }}>
+                    <c.icon size={17} strokeWidth={2.4}/>
+                  </div>
+                  <span style={{ flex: 1, color: T.ink }}>{c.l}</span>
+                  {c.sel && (
+                    <div style={{
+                      width: 18, height: 18, borderRadius: 9, background: T.primary, color: '#fff',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    }}>
+                      <Check size={11} strokeWidth={3.5}/>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          <Field label="Заметка (не обязательно)" value="" placeholder="На что потратила?"/>
+          <Field label="Когда?" value="9 мая, сегодня" icon={Calendar}/>
+
+          <div style={{ marginTop: 'auto', paddingTop: 8 }}>
+            <div style={{
+              background: dark
+                ? 'linear-gradient(135deg, oklch(0.62 0.24 340) 0%, oklch(0.52 0.22 305) 100%)'
+                : T.primary,
+              backgroundSize: '200% 200%',
+              animation: 'mGradShift 6s ease infinite',
+              color: '#fff',
+              padding: '17px 20px', borderRadius: 18,
+              textAlign: 'center', fontSize: 16, fontWeight: 800,
+              boxShadow: `0 8px 24px ${T.primary}50`,
+            }}>
+              Сохранить ✨
+            </div>
+          </div>
+        </div>
+      </>
+    }>
+      <div style={{ padding: '60px 22px 0' }}>
+        <div style={{ fontFamily: DISPLAY, fontSize: 28, fontWeight: 700 }}>Финансы</div>
+      </div>
+      <div style={{ padding: '12px 20px', opacity: 0.4 }}>
+        <div style={{
+          background: cardBg(T, dark), borderRadius: 18,
+          border: `1.5px solid ${T.line}`, padding: 16, marginBottom: 10,
+        }}>
+          <div style={{ fontSize: 14, fontWeight: 700 }}>Аренда стенда</div>
+          <div style={{ fontSize: 12, color: T.ink3, marginTop: 2 }}>Взносы · $200</div>
+        </div>
+      </div>
+    </Phone>
+  );
+}
+
+window.Dashboard   = Dashboard;
+window.Sell        = Sell;
+window.Inventory   = Inventory;
+window.ExpenseModal = ExpenseModal;
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════
+     APP BOOTSTRAP
+════════════════════════════════════════════════════════════ -->
+<script type="text/babel">
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "theme":  "dark",
+  "accent": "lavender"
+}/*EDITMODE-END*/;
+
+const ACCENTS = {
+  pink:     { h: 340, name: 'Bubblegum' },
+  lavender: { h: 295, name: 'Lavender'  },
+  mint:     { h: 165, name: 'Mint'      },
+  coral:    { h: 30,  name: 'Peach'     },
+  sky:      { h: 230, name: 'Sky'       },
+};
+
+function applyAccent(theme, accentKey, dark) {
+  const a = ACCENTS[accentKey];
+  if (!a) return theme;
+  return {
+    ...theme,
+    primary:       `oklch(${dark ? 0.82 : 0.62} ${dark ? 0.20 : 0.15} ${a.h})`,
+    primarySoft:   `oklch(${dark ? 0.24 : 0.96} ${dark ? 0.12 : 0.04} ${a.h})`,
+    primaryBorder: `oklch(${dark ? 0.48 : 0.86} ${dark ? 0.18 : 0.08} ${a.h})`,
+    ...(dark && {
+      heroGrad: `linear-gradient(135deg, oklch(0.52 0.26 ${a.h}) 0%, oklch(0.44 0.24 ${a.h - 35}) 45%, oklch(0.48 0.22 ${a.h - 70}) 100%)`,
+    }),
+  };
+}
+
+function App() {
+  const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const dark = t.theme === 'dark';
+  const baseTheme = dark ? window.THEMES.dark : window.THEMES.light;
+  const T = applyAccent(baseTheme, t.accent, dark);
+
+  return (
+    <>
+      <DesignCanvas title="Трекер Мерча" subtitle="Cute · Russian · Themed">
+        <DCSection id="screens" title="Основные экраны">
+          <DCArtboard id="dashboard" label="Главная" width={402} height={874}>
+            <Dashboard T={T} dark={dark}/>
+          </DCArtboard>
+          <DCArtboard id="sell" label="Продать" width={402} height={874}>
+            <Sell T={T} dark={dark}/>
+          </DCArtboard>
+          <DCArtboard id="inventory" label="Склад" width={402} height={874}>
+            <Inventory T={T} dark={dark}/>
+          </DCArtboard>
+          <DCArtboard id="modal" label="Новый расход" width={402} height={874}>
+            <ExpenseModal T={T} dark={dark}/>
+          </DCArtboard>
+        </DCSection>
+      </DesignCanvas>
+
+      <TweaksPanel title="Настройки">
+        <TweakSection label="Оформление">
+          <TweakRadio label="Тема" value={t.theme}
+            options={['light', 'dark']}
+            onChange={(v) => setTweak('theme', v)}/>
+          <TweakRadio label="Акцент" value={t.accent}
+            options={['pink', 'lavender', 'mint', 'coral', 'sky']}
+            onChange={(v) => setTweak('accent', v)}/>
+        </TweakSection>
+      </TweaksPanel>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
