@@ -1,0 +1,30 @@
+{
+  "expo": {
+    "name": "Трекер Мерча",
+    "slug": "merch-tracker",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#18141F"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.merch.tracker"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#18141F"
+      },
+      "package": "com.merch.tracker"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
