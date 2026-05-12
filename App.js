@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Platform } from 'react-native';
+import { Platform, View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -18,6 +18,25 @@ import TabNavigator from './src/navigation/TabNavigator';
 
 if (Platform.OS !== 'web') {
   SplashScreen.preventAutoHideAsync();
+}
+
+class ErrorBoundary extends React.Component {
+  state = { error: null };
+  componentDidCatch(error, info) {
+    this.setState({ error: error.toString() + '\n\n' + (info?.componentStack || '') });
+  }
+  render() {
+    if (this.state.error) {
+      return (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24, backgroundColor: '#18141F' }}>
+          <Text style={{ color: '#FF8AEC', fontSize: 13, fontFamily: 'monospace', textAlign: 'left' }}>
+            {'ERROR:\n' + this.state.error}
+          </Text>
+        </View>
+      );
+    }
+    return this.props.children;
+  }
 }
 
 export default function App() {
@@ -39,14 +58,16 @@ export default function App() {
   if (!fontsLoaded && Platform.OS !== 'web') return null;
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        <ThemeProvider>
-          <NavigationContainer>
-            <TabNavigator />
-          </NavigationContainer>
-        </ThemeProvider>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+    <ErrorBoundary>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <SafeAreaProvider>
+          <ThemeProvider>
+            <NavigationContainer>
+              <TabNavigator />
+            </NavigationContainer>
+          </ThemeProvider>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    </ErrorBoundary>
   );
 }
