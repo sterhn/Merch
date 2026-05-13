@@ -22,8 +22,11 @@ if (Platform.OS !== 'web') {
 
 class ErrorBoundary extends React.Component {
   state = { error: null };
+  static getDerivedStateFromError(error) {
+    return { error: error.toString() };
+  }
   componentDidCatch(error, info) {
-    this.setState({ error: error.toString() + '\n\n' + (info?.componentStack || '') });
+    console.error('Render error:', error, info);
   }
   render() {
     if (this.state.error) {
