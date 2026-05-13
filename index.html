@@ -26,23 +26,12 @@
   <link rel="icon" href="/Merch/favicon.ico" /></head>
 
   <body style="background:#18141F;">
+    <!-- Use static rendering with Expo Router to support running without JavaScript. -->
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
+    <!-- The root element for your Expo app. -->
     <div id="root"></div>
-    <div id="err" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:#18141F;color:#FF8AEC;font-size:13px;font-family:monospace;padding:20px;overflow:auto;z-index:9999;white-space:pre-wrap;"></div>
-    <script>
-      window.onerror = function(msg, src, line, col, err) {
-        var d = document.getElementById('err');
-        d.style.display = 'block';
-        d.textContent = 'JS ERROR:\n' + msg + '\nat ' + src + ':' + line + ':' + col + '\n\n' + (err ? err.stack : '');
-      };
-      window.addEventListener('unhandledrejection', function(e) {
-        var d = document.getElementById('err');
-        d.style.display = 'block';
-        d.textContent = 'PROMISE ERROR:\n' + (e.reason ? (e.reason.stack || e.reason) : e);
-      });
-    </script>
-  <script src="/Merch/_expo/static/js/web/App-2fb852e0c646c7798d4d0a1b8a6a8db9.js" defer></script>
+  <script src="/Merch/_expo/static/js/web/App-3dbe046983ac574dd982399a851aab23.js" defer></script>
 </body>
 </html>
