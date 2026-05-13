@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import {
-  View, Text, ScrollView, StyleSheet, Animated, Easing,
+  View, Text, ScrollView, StyleSheet, Animated, Easing, Platform,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -9,6 +9,10 @@ import { useTheme } from '../theme/ThemeContext';
 import { INVENTORY_ITEMS } from '../data/mockData';
 
 function FadeUp({ index, children, style }) {
+  if (Platform.OS === 'web') {
+    return <View style={style}>{children}</View>;
+  }
+
   const opacity = useRef(new Animated.Value(0)).current;
   const ty = useRef(new Animated.Value(16)).current;
 
