@@ -60,6 +60,14 @@ export default function App() {
 
   if (!fontsLoaded && Platform.OS !== 'web') return null;
 
+  if (Platform.OS === 'web') {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#FF0066' }}>
+        <Text style={{ color: '#fff', fontSize: 28 }}>React is alive!</Text>
+      </View>
+    );
+  }
+
   return (
     <ErrorBoundary>
       <GestureHandlerRootView style={{ flex: 1 }}>
